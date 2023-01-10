@@ -6,8 +6,8 @@ import routes from './routes/index';
 dotenv.config();
 
 const app = express();
-const { PORT = 3000, MONGODB_URL } = process.env;
-mongoose.connect(MONGODB_URL);
+const { PORT = 3000 } = process.env;
+mongoose.connect('mongodb://localhost:27017/mestodb');
 
 app.use((req, res, next) => {
   req.user = {

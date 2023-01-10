@@ -2,6 +2,7 @@ import express from 'express';
 import * as dotenv from 'dotenv';
 import mongoose from 'mongoose';
 import routes from './routes/index';
+import { NOTFOUND_CODE } from './constants/statusCodes';
 
 dotenv.config();
 
@@ -20,7 +21,7 @@ app.use((req, res, next) => {
 app.use(routes);
 
 app.get('/', (req, res) => {
-  res.send('Server is still being developed');
+  res.status(NOTFOUND_CODE).send({ message: 'Запрашиваемая страница не найдена.' });
 });
 
 app.listen(PORT, () => {

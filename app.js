@@ -21,7 +21,11 @@ app.use((req, res, next) => {
 app.use(routes);
 
 app.get('/', (req, res) => {
-  res.status(NOTFOUND_CODE).send({ message: 'Запрашиваемая страница не найдена.' });
+  res.send('Server is still being developed');
+});
+
+app.use((req, res) => {
+  res.status(NOTFOUND_CODE).send({ message: 'Запрашиваемая страница не существует' });
 });
 
 app.listen(PORT, () => {

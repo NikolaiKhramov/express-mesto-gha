@@ -1,10 +1,10 @@
 import express from 'express';
 import usersRoutes from './users';
-import cardsRouter from './cards';
+import cardsRoutes from './cards';
 
 const routes = express.Router();
 
 routes.use('/users', usersRoutes);
-routes.use('/cards', cardsRouter);
+routes.use('/cards', cardsRoutes);
 
 export default routes;

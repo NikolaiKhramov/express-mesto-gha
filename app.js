@@ -1,8 +1,8 @@
 import express from 'express';
 import * as dotenv from 'dotenv';
 import mongoose from 'mongoose';
+import { constants } from 'http2';
 import routes from './routes/index';
-import { NOTFOUND_CODE } from './constants/statusCodes';
 
 dotenv.config();
 
@@ -25,7 +25,7 @@ app.get('/', (req, res) => {
 });
 
 app.use((req, res) => {
-  res.status(NOTFOUND_CODE).send({ message: 'Запрашиваемая страница не существует' });
+  res.status(constants.HTTP_STATUS_NOT_FOUND).send({ message: 'Запрашиваемая страница не существует' });
 });
 
 app.listen(PORT, () => {

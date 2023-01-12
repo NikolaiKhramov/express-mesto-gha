@@ -1,15 +1,13 @@
+import { constants } from 'http2';
 import User from '../models/user';
-import {
-  OK_CODE, ITEMCREATED_CODE, ERROR_CODE, NOTFOUND_CODE, SERVERERROR_CODE,
-} from '../constants/statusCodes';
 
 export const getAllUsers = (req, res) => {
   User.find({})
     .then((users) => {
-      res.status(OK_CODE).send(users);
+      res.status(constants.HTTP_STATUS_OK).send(users);
     })
     .catch(() => {
-      res.status(SERVERERROR_CODE).send({ message: 'Непредвиденная ошибка на сервере.' });
+      res.status(constants.HTTP_STATUS_INTERNAL_SERVER_ERROR).send({ message: 'Непредвиденная ошибка на сервере.' });
     });
 };
 
@@ -19,16 +17,16 @@ export const getUserById = (req, res) => {
   User.findById(userId)
     .then((foundUser) => {
       if (!foundUser) {
-        res.status(NOTFOUND_CODE).send({ message: 'Пользователь с указанным id не найден.' });
+        res.status(constants.HTTP_STATUS_NOT_FOUND).send({ message: 'Пользователь с указанным id не найден.' });
         return;
       }
-      res.status(OK_CODE).send({ foundUser });
+      res.status(constants.HTTP_STATUS_OK).send({ foundUser });
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        res.status(ERROR_CODE).send({ message: 'Некорректный id пользователя.' });
+        res.status(constants.HTTP_STATUS_BAD_REQUEST).send({ message: 'Некорректный id пользователя.' });
       } else {
-        res.status(SERVERERROR_CODE).send({ message: 'Непредвиденная ошибка на сервере.' });
+        res.status(constants.HTTP_STATUS_INTERNAL_SERVER_ERROR).send({ message: 'Непредвиденная ошибка на сервере.' });
       }
     });
 };
@@ -38,13 +36,13 @@ export const createNewUser = (req, res) => {
 
   User.create({ name, about, avatar })
     .then((createdUser) => {
-      res.status(ITEMCREATED_CODE).send(createdUser);
+      res.status(constants.HTTP_STATUS_CREATED).send(createdUser);
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        res.status(ERROR_CODE).send({ message: 'Некорректные данные для создания нового пользователя.' });
+        res.status(constants.HTTP_STATUS_BAD_REQUEST).send({ message: 'Некорректные данные для создания нового пользователя.' });
       } else {
-        res.status(SERVERERROR_CODE).send({ message: 'Непредвиденная ошибка на сервере.' });
+        res.status(constants.HTTP_STATUS_INTERNAL_SERVER_ERROR).send({ message: 'Непредвиденная ошибка на сервере.' });
       }
     });
 };
@@ -56,15 +54,15 @@ export const updateUserInfo = (req, res) => {
   User.findByIdAndUpdate({ _id: userId }, { name, about }, { new: true, runValidators: true })
     .then((userUpdated) => {
       if (!userUpdated) {
-        res.status(NOTFOUND_CODE).send({ message: 'Пользователь с указанным id не найден.' });
+        res.status(constants.HTTP_STATUS_NOT_FOUND).send({ message: 'Пользователь с указанным id не найден.' });
       }
-      res.status(OK_CODE).send({ userUpdated });
+      res.status(constants.HTTP_STATUS_OK).send({ userUpdated });
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        res.status(ERROR_CODE).send({ message: 'Некорректные данные для обновления информации пользователя.' });
+        res.status(constants.HTTP_STATUS_BAD_REQUEST).send({ message: 'Некорректные данные для обновления информации пользователя.' });
       } else {
-        res.status(SERVERERROR_CODE).send({ message: 'Непредвиденная ошибка на сервере.' });
+        res.status(constants.HTTP_STATUS_INTERNAL_SERVER_ERROR).send({ message: 'Непредвиденная ошибка на сервере.' });
       }
     });
 };
@@ -76,16 +74,16 @@ export const updateUserAvatar = (req, res) => {
   User.findByIdAndUpdate({ _id: userId }, { avatar }, { new: true, runValidators: true })
     .then((userUpdated) => {
       if (!userUpdated) {
-        res.status(NOTFOUND_CODE).send({ message: 'Пользователь с указанным id не найден.' });
+        res.status(constants.HTTP_STATUS_NOT_FOUND).send({ message: 'Пользователь с указанным id не найден.' });
         return;
       }
-      res.status(OK_CODE).send({ userUpdated });
+      res.status(constants.HTTP_STATUS_OK).send({ userUpdated });
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        res.status(ERROR_CODE).send({ message: 'Некорректные данные для обновления аватара пользователя.' });
+        res.status(constants.HTTP_STATUS_BAD_REQUEST).send({ message: 'Некорректные данные для обновления аватара пользователя.' });
       } else {
-        res.status(SERVERERROR_CODE).send({ message: 'Непредвиденная ошибка на сервере.' });
+        res.status(constants.HTTP_STATUS_INTERNAL_SERVER_ERROR).send({ message: 'Непредвиденная ошибка на сервере.' });
       }
     });
 };

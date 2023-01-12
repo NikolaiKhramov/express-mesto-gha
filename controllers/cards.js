@@ -1,15 +1,14 @@
+import { constants } from 'http2';
 import Card from '../models/card';
-import {
-  OK_CODE, ITEMCREATED_CODE, ERROR_CODE, NOTFOUND_CODE, SERVERERROR_CODE,
-} from '../constants/statusCodes';
 
 export const getAllCards = (req, res) => {
   Card.find({})
+    .populate(['owner', 'likes.[]'])
     .then((cards) => {
-      res.status(OK_CODE).send(cards);
+      res.status(constants.HTTP_STATUS_OK).send(cards);
     })
     .catch(() => {
-      res.status(SERVERERROR_CODE).send({ message: 'Непредвиденная ошибка на сервере.' });
+      res.status(constants.HTTP_STATUS_INTERNAL_SERVER_ERROR).send({ message: 'Непредвиденная ошибка на сервере.' });
     });
 };
 
@@ -19,13 +18,13 @@ export const createNewCard = (req, res) => {
 
   Card.create({ name, link, owner: cardOwner })
     .then((createdCard) => {
-      res.status(ITEMCREATED_CODE).send(createdCard);
+      res.status(constants.HTTP_STATUS_CREATED).send(createdCard);
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        res.status(ERROR_CODE).send({ message: 'Некорректные данные для создания новой карточки.' });
+        res.status(constants.HTTP_STATUS_BAD_REQUEST).send({ message: 'Некорректные данные для создания новой карточки.' });
       } else {
-        res.status(SERVERERROR_CODE).send({ message: 'Непредвиденная ошибка на сервере.' });
+        res.status(constants.HTTP_STATUS_INTERNAL_SERVER_ERROR).send({ message: 'Непредвиденная ошибка на сервере.' });
       }
     });
 };
@@ -36,16 +35,16 @@ export const deleteCard = (req, res) => {
   Card.findByIdAndRemove(id)
     .then((cardToDelete) => {
       if (!cardToDelete) {
-        res.status(NOTFOUND_CODE).send({ message: 'Карточка с указанным id не найдена.' });
+        res.status(constants.HTTP_STATUS_NOT_FOUND).send({ message: 'Карточка с указанным id не найдена.' });
         return;
       }
-      res.status(OK_CODE).send(cardToDelete);
+      res.status(constants.HTTP_STATUS_OK).send(cardToDelete);
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        res.status(ERROR_CODE).send({ message: 'Невалидный id карточки.' });
+        res.status(constants.HTTP_STATUS_BAD_REQUEST).send({ message: 'Невалидный id карточки.' });
       } else {
-        res.status(SERVERERROR_CODE).send({ message: 'Непредвиденная ошибка на сервере.' });
+        res.status(constants.HTTP_STATUS_INTERNAL_SERVER_ERROR).send({ message: 'Непредвиденная ошибка на сервере.' });
       }
     });
 };
@@ -60,16 +59,16 @@ export const setLike = (req, res) => {
   )
     .then((likedCard) => {
       if (!likedCard) {
-        res.status(NOTFOUND_CODE).send({ message: 'Карточка с указанным id не найдена.' });
+        res.status(constants.HTTP_STATUS_NOT_FOUND).send({ message: 'Карточка с указанным id не найдена.' });
         return;
       }
-      res.status(OK_CODE).send(likedCard);
+      res.status(constants.HTTP_STATUS_OK).send(likedCard);
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        res.status(ERROR_CODE).send({ message: 'Некорректный id карточки.' });
+        res.status(constants.HTTP_STATUS_BAD_REQUEST).send({ message: 'Некорректный id карточки.' });
       } else {
-        res.status(SERVERERROR_CODE).send({ message: 'Непредвиденная ошибка на сервере.' });
+        res.status(constants.HTTP_STATUS_INTERNAL_SERVER_ERROR).send({ message: 'Непредвиденная ошибка на сервере.' });
       }
     });
 };
@@ -84,16 +83,16 @@ export const removeLike = (req, res) => {
   )
     .then((dislikedCard) => {
       if (!dislikedCard) {
-        res.status(NOTFOUND_CODE).send({ message: 'Карточка с указанным id не найдена.' });
+        res.status(constants.HTTP_STATUS_NOT_FOUND).send({ message: 'Карточка с указанным id не найдена.' });
         return;
       }
-      res.status(OK_CODE).send(dislikedCard);
+      res.status(constants.HTTP_STATUS_OK).send(dislikedCard);
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        res.status(ERROR_CODE).send({ message: 'Некорректный id карточки.' });
+        res.status(constants.HTTP_STATUS_BAD_REQUEST).send({ message: 'Некорректный id карточки.' });
       } else {
-        res.status(SERVERERROR_CODE).send({ message: 'Непредвиденная ошибка на сервере.' });
+        res.status(constants.HTTP_STATUS_INTERNAL_SERVER_ERROR).send({ message: 'Непредвиденная ошибка на сервере.' });
       }
     });
 };

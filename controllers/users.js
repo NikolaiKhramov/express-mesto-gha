@@ -140,6 +140,6 @@ export const login = (req, res, next) => {
       res.send({ jwtToken });
     })
     .catch(() => {
-      next(new UnauthorizedError('Неправильная почта или пароль. contr'));
+      next(new UnauthorizedError('Неправильная почта или пароль.'));
     });
 };

@@ -37,7 +37,7 @@ export const deleteCard = (req, res, next) => {
     .then((cardToDelete) => {
       if (!cardToDelete) {
         throw new NotFoundError('Карточка с указанным id не найдена.');
-      } else if (cardToDelete.owner !== req.user._id) {
+      } else if (cardToDelete.owner.toString() !== req.user._id) {
         throw new ForbiddenError('Доступ запрещен.');
       }
       res.status(constants.HTTP_STATUS_OK).send(cardToDelete);

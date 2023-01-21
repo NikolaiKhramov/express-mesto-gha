@@ -28,7 +28,13 @@ export const profileUpdateValidation = celebrate({
 
 export const avatarUpdateValidation = celebrate({
   body: Joi.object().keys({
-    avatar: Joi.string().pattern(new RegExp(urlValidator)).required,
+    avatar: Joi.string().pattern(new RegExp(urlValidator)).required(),
+  }),
+});
+
+export const userIdValidation = celebrate({
+  params: Joi.object({
+    id: Joi.string().alphanum().length(24),
   }),
 });
 
@@ -36,5 +42,11 @@ export const newCardDataValidation = celebrate({
   body: Joi.object().keys({
     name: Joi.string().min(2).max(30).required(),
     link: Joi.string().pattern(new RegExp(urlValidator)).required(),
+  }),
+});
+
+export const cardIdValidator = celebrate({
+  params: Joi.object({
+    cardId: Joi.string().alphanum().length(24),
   }),
 });

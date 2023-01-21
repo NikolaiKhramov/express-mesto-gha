@@ -5,6 +5,7 @@ import User from '../models/user';
 import BadRequestError from '../errors/BadRequestError';
 import NotFoundError from '../errors/NotFoundError';
 import ConflictError from '../errors/ConflctError';
+import UnauthorizedError from '../errors/UnauthorizedError';
 
 export const getAllUsers = (req, res, next) => {
   User.find({})
@@ -139,6 +140,6 @@ export const login = (req, res, next) => {
       res.send({ jwtToken });
     })
     .catch(() => {
-      next(new BadRequestError('Неправильная почта или пароль.'));
+      next(new UnauthorizedError('Неправильная почта или пароль. contr'));
     });
 };

@@ -5,7 +5,6 @@ import User from '../models/user';
 import BadRequestError from '../errors/BadRequestError';
 import NotFoundError from '../errors/NotFoundError';
 import ConflictError from '../errors/ConflctError';
-import UnauthorizedError from '../errors/UnauthorizedError';
 
 export const getAllUsers = (req, res, next) => {
   User.find({})
@@ -60,10 +59,6 @@ export const createNewUser = (req, res, next) => {
     name, about, avatar, email, password,
   } = req.body;
 
-  if (!email || !password) {
-    throw new BadRequestError('Поля email и/или password обязательны.');
-  }
-
   bcrypt.hash(password, 10)
     .then((hash) => {
       User.create({
@@ -71,6 +66,9 @@ export const createNewUser = (req, res, next) => {
       })
         .then((createdUser) => {
           res.status(constants.HTTP_STATUS_CREATED).send({
+            name: createdUser.name,
+            about: createdUser.about,
+            avatar: createdUser.avatar,
             id: createdUser._id,
             email: createdUser.email,
           });
@@ -141,6 +139,6 @@ export const login = (req, res, next) => {
       res.send({ jwtToken });
     })
     .catch(() => {
-      next(new UnauthorizedError('Неправильная почта или пароль.3'));
+      next(new BadRequestError('Неправильная почта или пароль.'));
     });
 };

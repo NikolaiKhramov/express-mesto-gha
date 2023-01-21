@@ -2,8 +2,10 @@ import express from 'express';
 import * as dotenv from 'dotenv';
 import mongoose from 'mongoose';
 import { constants } from 'http2';
+import { errors } from 'celebrate';
 import routes from './routes/index';
 import { createNewUser, login } from './controllers/users';
+import { signUpDataValidation, signInDataValidation } from './utils/validation';
 
 dotenv.config();
 
@@ -13,8 +15,8 @@ mongoose.connect('mongodb://localhost:27017/mestodb');
 
 app.use(express.json());
 
-app.post('/signup', createNewUser);
-app.post('/signin', login);
+app.post('/signup', signUpDataValidation, createNewUser);
+app.post('/signin', signInDataValidation, login);
 
 app.use(routes);
 
@@ -25,6 +27,8 @@ app.get('/', (req, res) => {
 app.use((req, res) => {
   res.status(constants.HTTP_STATUS_NOT_FOUND).send({ message: 'Запрашиваемая страница не существует' });
 });
+
+app.use(errors());
 
 app.use((err, req, res, next) => {
   const {

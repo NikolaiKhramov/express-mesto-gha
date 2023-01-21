@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+import { urlValidator } from '../utils/validation';
 
 const cardSchema = new mongoose.Schema({
   name: {
@@ -10,6 +11,9 @@ const cardSchema = new mongoose.Schema({
   link: {
     type: String,
     required: true,
+    validate: {
+      validator: (url) => urlValidator.test(url),
+    },
   },
   owner: {
     type: mongoose.Schema.Types.ObjectId,

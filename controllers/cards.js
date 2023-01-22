@@ -33,14 +33,16 @@ export const createNewCard = (req, res, next) => {
 export const deleteCard = (req, res, next) => {
   const id = req.params.cardId;
 
-  Card.findByIdAndRemove(id)
+  Card.findById(id)
     .then((cardToDelete) => {
       if (!cardToDelete) {
         throw new NotFoundError('Карточка с указанным id не найдена.');
       } else if (cardToDelete.owner.toString() !== req.user._id) {
         throw new ForbiddenError('Доступ запрещен.');
+      } else {
+        cardToDelete.remove();
+        res.status(constants.HTTP_STATUS_OK).send(cardToDelete);
       }
-      res.status(constants.HTTP_STATUS_OK).send(cardToDelete);
     })
     .catch((err) => {
       if (err.name === 'CastError') {

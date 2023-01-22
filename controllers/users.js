@@ -5,16 +5,13 @@ import User from '../models/user';
 import BadRequestError from '../errors/BadRequestError';
 import NotFoundError from '../errors/NotFoundError';
 import ConflictError from '../errors/ConflctError';
-import UnauthorizedError from '../errors/UnauthorizedError';
 
 export const getAllUsers = (req, res, next) => {
   User.find({})
     .then((users) => {
       res.status(constants.HTTP_STATUS_OK).send(users);
     })
-    .catch((err) => {
-      next(err);
-    });
+    .catch(next);
 };
 
 export const getCurrentUser = (req, res, next) => {
@@ -27,13 +24,7 @@ export const getCurrentUser = (req, res, next) => {
       }
       res.status(constants.HTTP_STATUS_OK).send({ foundUser });
     })
-    .catch((err) => {
-      if (err.name === 'CastError') {
-        next(new BadRequestError('Некорректный id пользователя.'));
-      } else {
-        next(err);
-      }
-    });
+    .catch(next);
 };
 
 export const getUserById = (req, res, next) => {
@@ -66,13 +57,9 @@ export const createNewUser = (req, res, next) => {
         name, about, avatar, email, password: hash,
       })
         .then((createdUser) => {
-          res.status(constants.HTTP_STATUS_CREATED).send({
-            name: createdUser.name,
-            about: createdUser.about,
-            avatar: createdUser.avatar,
-            id: createdUser._id,
-            email: createdUser.email,
-          });
+          const createdUserSecured = createdUser.toObject();
+          delete createdUserSecured.password;
+          res.status(constants.HTTP_STATUS_CREATED).send(createdUserSecured);
         })
         .catch((err) => {
           if (err.name === 'ValidationError') {
@@ -139,7 +126,5 @@ export const login = (req, res, next) => {
 
       res.send({ jwtToken });
     })
-    .catch(() => {
-      next(new UnauthorizedError('Неправильная почта или пароль.'));
-    });
+    .catch((next));
 };

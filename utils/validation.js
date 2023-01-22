@@ -34,7 +34,7 @@ export const avatarUpdateValidation = celebrate({
 
 export const userIdValidation = celebrate({
   params: Joi.object({
-    id: Joi.string().alphanum().length(24),
+    id: Joi.string().hex().length(24).required(),
   }),
 });
 
@@ -47,6 +47,6 @@ export const newCardDataValidation = celebrate({
 
 export const cardIdValidator = celebrate({
   params: Joi.object({
-    cardId: Joi.string().alphanum().length(24),
+    cardId: Joi.string().hex().length(24).required(),
   }),
 });

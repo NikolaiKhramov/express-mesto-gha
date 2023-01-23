@@ -43,7 +43,8 @@ export const deleteCard = (req, res, next) => {
         Card.findByIdAndRemove(id)
           .then((deletedCard) => {
             res.status(constants.HTTP_STATUS_OK).send(deletedCard);
-          });
+          })
+          .catch(next);
       }
     })
     .catch((err) => {

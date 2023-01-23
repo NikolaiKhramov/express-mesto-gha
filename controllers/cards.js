@@ -40,8 +40,10 @@ export const deleteCard = (req, res, next) => {
       } else if (cardToDelete.owner.toString() !== req.user._id) {
         throw new ForbiddenError('Доступ запрещен.');
       } else {
-        cardToDelete.remove();
-        res.status(constants.HTTP_STATUS_OK).send(cardToDelete);
+        Card.findByIdAndRemove(id)
+          .then((deletedCard) => {
+            res.status(constants.HTTP_STATUS_OK).send(deletedCard);
+          });
       }
     })
     .catch((err) => {

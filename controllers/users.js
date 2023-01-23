@@ -126,5 +126,5 @@ export const login = (req, res, next) => {
 
       res.send({ jwtToken });
     })
-    .catch((next));
+    .catch(next);
 };
